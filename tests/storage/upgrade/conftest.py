@@ -10,7 +10,7 @@ from tests.storage.upgrade.utils import (
     create_vm_for_snapshot_upgrade_tests,
 )
 from tests.storage.utils import update_scratch_space_sc
-from utilities.constants import HOTPLUG_DISK_SERIAL
+from utilities.constants import HOTPLUG_DISK_SERIAL, HOTPLUG_DISK_VIRTIO_BUS
 from utilities.storage import create_dv, virtctl_volume
 from utilities.virt import (
     VirtualMachineForTests,
@@ -156,6 +156,7 @@ def hotplug_volume_upg(fedora_vm_for_hotplug_upg):
         volume_name="blank-dv",
         persist=True,
         serial=HOTPLUG_DISK_SERIAL,
+        bus=HOTPLUG_DISK_VIRTIO_BUS,
     ) as res:
         status, out, err = res
         assert status, f"Failed to add volume to VM, out: {out}, err: {err}."

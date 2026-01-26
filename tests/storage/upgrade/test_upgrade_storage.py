@@ -12,8 +12,9 @@ from tests.upgrade_params import (
     SNAPSHOT_RESTORE_CREATE_AFTER_UPGRADE,
     STORAGE_NODE_ID_PREFIX,
 )
-from utilities.constants import DEPENDENCY_SCOPE_SESSION, LS_COMMAND
+from utilities.constants import DEPENDENCY_SCOPE_SESSION, LS_COMMAND, HOTPLUG_DISK_VIRTIO_BUS
 from utilities.storage import (
+    assert_disk_bus,
     assert_disk_serial,
     assert_hotplugvolume_nonexist,
     run_command_on_cirros_vm_and_check_output,
@@ -104,6 +105,11 @@ class TestUpgradeStorage:
     ):
         wait_for_vm_volume_ready(vm=fedora_vm_for_hotplug_upg)
         assert_disk_serial(vm=fedora_vm_for_hotplug_upg)
+        assert_disk_bus(
+            vm=fedora_vm_for_hotplug_upg,
+            volume=blank_disk_dv_with_default_sc,
+            expected_bus=HOTPLUG_DISK_VIRTIO_BUS,
+        )
         assert_hotplugvolume_nonexist(vm=fedora_vm_for_hotplug_upg)
 
     """ Post-upgrade tests """
@@ -203,5 +209,10 @@ class TestUpgradeStorage:
         fedora_vm_for_hotplug_upg_ssh_connectivity,
     ):
         assert_disk_serial(vm=fedora_vm_for_hotplug_upg)
+        assert_disk_bus(
+            vm=fedora_vm_for_hotplug_upg,
+            volume=blank_disk_dv_with_default_sc,
+            expected_bus=HOTPLUG_DISK_VIRTIO_BUS,
+        )
         assert_hotplugvolume_nonexist(vm=fedora_vm_for_hotplug_upg)
         migrate_vm_and_verify(vm=fedora_vm_for_hotplug_upg, check_ssh_connectivity=True)
