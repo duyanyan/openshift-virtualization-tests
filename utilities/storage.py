@@ -660,15 +660,10 @@ def assert_disk_serial(vm, command=shlex.split("sudo ls /dev/disk/by-id")):
 
 
 def assert_disk_bus(vm, volume, expected_bus):
-    disk = next(
-        (d for d in vm.vmi.instance.spec.domain.devices.disks if d.get("name") == volume.name),
-        None
-    )
+    disk = next((d for d in vm.vmi.instance.spec.domain.devices.disks if d.get("name") == volume.name), None)
     assert disk is not None, f"Disk {volume.name} not found in VM {vm.name}"
     actual_bus = disk.get("disk", {}).get("bus")
-    assert actual_bus == expected_bus, (
-        f"Disk {volume.name} has bus '{actual_bus}' but expected '{expected_bus}'"
-    )
+    assert actual_bus == expected_bus, f"Disk {volume.name} has bus '{actual_bus}' but expected '{expected_bus}'"
 
 
 def assert_hotplugvolume_nonexist(vm):
